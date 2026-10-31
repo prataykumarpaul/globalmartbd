@@ -101,7 +101,7 @@ a.btn{display:inline-block;text-decoration:none}
 <div class="shelf" id="shelf" aria-hidden="true"></div>
 </div></div>
 
-<div class="wrap perks"><span>Cash on delivery</span><span>bKash and Nagad accepted</span><span>Delivery in 2–4 days</span><span>Free delivery over ৳3,000</span></div>
+<div class="wrap perks"><span>Cash on delivery</span><span>bKash, Nagad and Rocket accepted</span><span>Delivery in 2–4 days</span><span>Free delivery over ৳3,000</span></div>
 
 <section id="shop"><div class="wrap">
 <h2>Shop all products</h2>
@@ -132,8 +132,9 @@ a.btn{display:inline-block;text-decoration:none}
 
 <script>
 // Edit these two lines to your real details.
-var WA = "8801700000000";        // WhatsApp number, with 880 and no + sign
-var PAYNUM = "01700000000";      // bKash / Nagad number
+var WA = "8801910110012";        // WhatsApp number, with 880 and no + sign
+var MAIL = "prataykumarpaul@gmail.com";  // order notifications go here
+var PAYNUM = "01910110012";      // bKash / Nagad number
 
 var P = [
 {id:1,n:"Hydrating Face Serum",c:"Skincare",p:850,o:1100,t:"dropper",col:"#E9A23B",tag:"Bestseller"},
@@ -164,7 +165,7 @@ function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {"&":"&amp
 
 var cat="All",query="",cart={},step="cart",lastOrder=null;
 var $=function(i){return document.getElementById(i)};
-$("ph").textContent="+"+WA.replace(/^880/,"0");
+$("ph").textContent=WA.replace(/^880/,"0");
 $("shelf").innerHTML=[P[0],P[11],P[4],P[9]].map(art).join("");
 
 var cats=["All"].concat(P.map(function(p){return p.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
@@ -211,7 +212,7 @@ df.innerHTML="<div class='row'><span>Subtotal</span><b>"+tk(sub())+"</b></div><p
 $("next").onclick=function(){step="form";draw()};
 return}
 $("dt").textContent="Delivery details";
-db.innerHTML="<label for='f_n'>Full name</label><input class='in' id='f_n' autocomplete='name'><label for='f_p'>Mobile number</label><input class='in' id='f_p' inputmode='tel' placeholder='01XXXXXXXXX' autocomplete='tel'><label for='f_a'>Full address</label><input class='in' id='f_a' placeholder='House, road, area, thana' autocomplete='street-address'><label for='f_z'>Delivery area</label><select class='in' id='f_z'><option>Dhaka</option><option>Outside Dhaka</option></select><label for='f_m'>Payment method</label><select class='in' id='f_m'><option>Cash on delivery</option><option>bKash</option><option>Nagad</option></select><p class='cat' id='pn' hidden>Send the total to "+PAYNUM+" (Send Money) and add the transaction ID in your WhatsApp message.</p><div class='err' id='err' role='alert'></div>";
+db.innerHTML="<label for='f_n'>Full name</label><input class='in' id='f_n' autocomplete='name'><label for='f_p'>Mobile number</label><input class='in' id='f_p' inputmode='tel' placeholder='01XXXXXXXXX' autocomplete='tel'><label for='f_a'>Full address</label><input class='in' id='f_a' placeholder='House, road, area, thana' autocomplete='street-address'><label for='f_z'>Delivery area</label><select class='in' id='f_z'><option>Dhaka</option><option>Outside Dhaka</option></select><label for='f_m'>Payment method</label><select class='in' id='f_m'><option>Cash on delivery</option><option>bKash</option><option>Nagad</option><option>Rocket</option></select><p class='cat' id='pn' hidden>Send the total to "+PAYNUM+" (Send Money) and add the transaction ID in your WhatsApp message.</p><div class='err' id='err' role='alert'></div>";
 df.innerHTML="<div class='row'><span>Subtotal</span><span>"+tk(sub())+"</span></div><div class='row'><span>Delivery</span><span id='sh'></span></div><div class='row t'><span>Total</span><span id='tot'></span></div><div style='display:flex;gap:8px;margin-top:12px'><button class='btn alt' id='back' style='color:var(--ink)'>Back</button><button class='btn' style='flex:1' id='place'>Place order</button></div>";
 function tot(){var s=ship($("f_z").value);$("sh").textContent=s?tk(s):"Free";$("tot").textContent=tk(sub()+s)}
 tot();$("f_z").onchange=tot;
@@ -224,6 +225,7 @@ if(!/^01[3-9]\d{8}$/.test(p)){$("err").textContent="Enter a valid 11-digit mobil
 if(a.length<8){$("err").textContent="Enter your full address so we can deliver it.";return}
 var z=$("f_z").value,m=$("f_m").value,s=ship(z),total=sub()+s,no="GM"+Date.now().toString().slice(-6);
 var msg="New order "+no+"\n"+items().map(function(i){return i.q+" x "+i.p.n+" = "+tk(i.p.p*i.q)}).join("\n")+"\nSubtotal: "+tk(sub())+"\nDelivery: "+(s?tk(s):"Free")+"\nTotal: "+tk(total)+"\nPayment: "+m+"\nName: "+n+"\nPhone: "+p+"\nAddress: "+a+" ("+z+")";
+try{fetch("https://formsubmit.co/ajax/"+MAIL,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({_subject:"New order "+no+" - Global Mart BD",_captcha:"false",_template:"table",Order:no,Name:n,Phone:p,Address:a+" ("+z+")",Payment:m,Total:tk(total),Details:msg})}).catch(function(){})}catch(e){}
 lastOrder={name:n,no:no,link:"https://wa.me/"+WA+"?text="+encodeURIComponent(msg)};
 cart={};step="done";sync();draw()};
 }
