@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Global Mart BD – Cosmetics Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF8FA;--surface:#fff;--ink:#2B1238;--muted:#6F5A7B;--brand:#B5256F;--onbrand:#fff;--soft:#F8E3EC;--line:#EBD5E0;--band:#2B1238;--onband:#FBEAF3;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1A0E22;--surface:#251433;--ink:#F6E9F1;--muted:#BBA3C6;--brand:#E2569B;--onbrand:#1A0E22;--soft:#34204A;--line:#47305E;--band:#120918;--onband:#FBEAF3;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1A0E22;--surface:#251433;--ink:#F6E9F1;--muted:#BBA3C6;--brand:#E2569B;--onbrand:#1A0E22;--soft:#34204A;--line:#47305E;--band:#120918;--onband:#FBEAF3;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri",system-ui,sans-serif;font-size:16px;line-height:1.55}
+h1,h2,h3,.logo{font-family:"Bricolage Grotesque","Hind Siliguri",system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:12px;padding:12px 0}
+.logo{font-weight:800;font-size:22px;color:var(--brand);white-space:nowrap}
+.logo small{color:var(--ink);font-weight:700}
+.search{flex:1;min-width:0;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 16px}
+.icon{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-weight:600;white-space:nowrap}
+.icon b{background:var(--brand);color:var(--onbrand);border-radius:999px;padding:0 8px;margin-left:4px}
+.hero{background:var(--band);color:var(--onband);overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:20px;align-items:end;padding-top:48px}
+.hero h1{font-size:clamp(34px,6vw,60px);line-height:1.02;font-weight:800;max-width:11em}
+.hero p{max-width:30em;opacity:.88;margin:16px 0 24px}
+.btn{background:var(--brand);color:var(--onbrand);border:0;border-radius:10px;padding:12px 22px;font-weight:600}
+.btn.alt{background:transparent;color:inherit;border:1.5px solid currentColor}
+.shelf{display:flex;align-items:flex-end;justify-content:center;gap:0;height:260px}
+.shelf svg{width:92px;height:auto;margin:0 -6px;filter:drop-shadow(0 8px 10px rgba(0,0,0,.35))}
+.shelf svg:nth-child(2){width:116px}.shelf svg:nth-child(3){width:104px}
+.perks{display:flex;flex-wrap:wrap;gap:8px 28px;padding:16px 0;color:var(--muted);font-weight:500}
+section{padding:36px 0}
+h2{font-size:28px;font-weight:700;margin-bottom:14px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 16px;white-space:nowrap;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--brand);color:var(--onbrand);border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pic{background:var(--soft);aspect-ratio:1/1;display:grid;place-items:center;position:relative}
+.pic svg{width:46%;height:auto}
+.tag{position:absolute;top:10px;left:10px;background:var(--ink);color:var(--bg);font-size:13px;font-weight:600;border-radius:6px;padding:1px 9px}
+.info{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.info h3{font-size:16px;font-weight:700}
+.cat{color:var(--muted);font-size:14px}
+.price{margin-top:auto;padding-top:6px;font-weight:700;font-size:18px}
+.price s{color:var(--muted);font-weight:400;font-size:14px;margin-left:6px}
+.info .btn{margin-top:8px;padding:9px;border-radius:8px}
+.empty{padding:40px 0;color:var(--muted)}
+.how{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.how div{border-left:3px solid var(--brand);padding:2px 0 2px 14px}
+.how h3{font-size:17px}.how p{margin:4px 0 0;color:var(--muted)}
+footer{background:var(--band);color:var(--onband);padding:30px 0}
+footer .wrap{display:flex;flex-wrap:wrap;gap:12px 40px;justify-content:space-between}
+footer p{margin:2px 0;opacity:.85}
+#veil{position:fixed;inset:0;background:rgba(20,8,28,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+#veil.on{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--bg);z-index:50;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#drawer.on{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--line)}
+.db{flex:1;overflow:auto;padding:14px 18px}
+.df{border-top:1px solid var(--line);padding:14px 18px}
+.line{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.line .pic{aspect-ratio:1/1;border-radius:8px}.line .pic svg{width:55%}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;margin-top:4px}
+.qty button{border:0;background:none;width:30px;height:28px;font-size:18px}
+.qty span{min-width:24px;text-align:center}
+.row{display:flex;justify-content:space-between;padding:2px 0}
+.row.t{font-weight:700;font-size:18px;padding-top:8px}
+label{display:block;font-weight:600;margin:12px 0 4px}
+.in{width:100%;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 12px}
+.err{color:#C0264B;font-size:14px;min-height:20px}
+:root[data-theme="dark"] .err{color:#FF8FAE}
+.ok{text-align:center;padding:30px 6px}
+.ok h2{font-size:26px}
+a.btn{display:inline-block;text-decoration:none}
+@media (max-width:760px){.hero .wrap{grid-template-columns:1fr;padding-top:34px}.shelf{height:200px}.shelf svg{width:76px}.shelf svg:nth-child(2){width:96px}.shelf svg:nth-child(3){width:86px}.logo{font-size:18px}.bar{flex-wrap:wrap}.search{order:3;flex-basis:100%}.bar .icon:first-of-type{margin-left:auto}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+<div class="logo">Global Mart <small>BD</small></div>
+<input id="q" class="search" type="search" placeholder="Search products" aria-label="Search products">
+<button class="icon" id="theme" aria-label="Switch light or dark theme">Theme</button>
+<button class="icon" id="cartBtn">Cart<b id="cnt">0</b></button>
+</div></header>
+
+<div class="hero"><div class="wrap">
+<div>
+<h1>Beauty you can trust, delivered across Bangladesh</h1>
+<p>Skincare, makeup, hair care and fragrance. Order online and pay on delivery in all 64 districts.</p>
+<a class="btn" href="#shop">Shop now</a>
+<p style="margin-top:22px;font-size:15px">অর্ডার করুন সহজে, ক্যাশ অন ডেলিভারিতে।</p>
+</div>
+<div class="shelf" id="shelf" aria-hidden="true"></div>
+</div></div>
+
+<div class="wrap perks"><span>Cash on delivery</span><span>bKash and Nagad accepted</span><span>Delivery in 2–4 days</span><span>Free delivery over ৳3,000</span></div>
+
+<section id="shop"><div class="wrap">
+<h2>Shop all products</h2>
+<div class="chips" id="chips"></div>
+<div class="grid" id="grid"></div>
+<div class="empty" id="empty" hidden>No products match your search. Try a different word or category.</div>
+</div></section>
+
+<section style="background:var(--soft)"><div class="wrap">
+<h2>How ordering works</h2>
+<div class="how">
+<div><h3>Pick your products</h3><p>Add items to your cart and review the total.</p></div>
+<div><h3>Enter delivery details</h3><p>Your name, phone number and full address.</p></div>
+<div><h3>Confirm on WhatsApp</h3><p>We confirm your order and send it out the same day.</p></div>
+</div></div></section>
+
+<footer><div class="wrap">
+<div><div class="logo" style="color:var(--onband)">Global Mart BD</div><p>Your online cosmetics store in Bangladesh.</p></div>
+<div><p>Phone and WhatsApp: <span id="ph"></span></p><p>Delivery: Dhaka ৳60, outside Dhaka ৳120</p><p>© 2026 Global Mart BD</p></div>
+</div></footer>
+
+<div id="veil"></div>
+<aside id="drawer" aria-label="Shopping cart" aria-hidden="true">
+<div class="dh"><h2 id="dt" style="margin:0;font-size:22px">Your cart</h2><button class="icon" id="close">Close</button></div>
+<div class="db" id="db"></div>
+<div class="df" id="df"></div>
+</aside>
+
+<script>
+// Edit these two lines to your real details.
+var WA = "8801700000000";        // WhatsApp number, with 880 and no + sign
+var PAYNUM = "01700000000";      // bKash / Nagad number
+
+var P = [
+{id:1,n:"Hydrating Face Serum",c:"Skincare",p:850,o:1100,t:"dropper",col:"#E9A23B",tag:"Bestseller"},
+{id:2,n:"Vitamin C Face Wash",c:"Skincare",p:420,o:550,t:"tube",col:"#F29B38"},
+{id:3,n:"Daily Sunscreen SPF 50",c:"Skincare",p:690,o:850,t:"tube",col:"#6FB7D9",tag:"New"},
+{id:4,n:"Rose Night Cream",c:"Skincare",p:980,t:"jar",col:"#D9689B"},
+{id:5,n:"Matte Lipstick, Ruby",c:"Makeup",p:480,o:600,t:"lip",col:"#B01F4B",tag:"Bestseller"},
+{id:6,n:"Matte Lipstick, Nude",c:"Makeup",p:480,t:"lip",col:"#B8745E"},
+{id:7,n:"Waterproof Kajal",c:"Makeup",p:220,t:"lip",col:"#2B2B33"},
+{id:8,n:"Compact Powder",c:"Makeup",p:560,o:700,t:"jar",col:"#C9967A"},
+{id:9,n:"Argan Hair Oil",c:"Hair",p:640,t:"dropper",col:"#9C5A2E"},
+{id:10,n:"Anti-Dandruff Shampoo",c:"Hair",p:480,o:560,t:"bottle",col:"#4FA58A"},
+{id:11,n:"Jasmine Body Mist",c:"Fragrance",p:750,o:900,t:"perfume",col:"#B9A2E0",tag:"New"},
+{id:12,n:"Oud Eau de Parfum",c:"Fragrance",p:2450,o:2900,t:"perfume",col:"#3B2A4F"}
+];
+var L="<rect x='34' y='%y' width='32' height='%h' rx='4' fill='#fff' opacity='.85'/>";
+var ART={
+tube:function(c){return "<rect x='34' y='14' width='32' height='92' rx='9' fill='"+c+"'/><rect x='38' y='104' width='24' height='10' rx='3' fill='#2B1238'/><rect x='38' y='44' width='24' height='32' rx='4' fill='#fff' opacity='.85'/>"},
+bottle:function(c){return "<rect x='42' y='6' width='16' height='14' rx='3' fill='#2B1238'/><rect x='30' y='20' width='40' height='96' rx='12' fill='"+c+"'/><rect x='35' y='50' width='30' height='34' rx='4' fill='#fff' opacity='.85'/>"},
+jar:function(c){return "<rect x='18' y='56' width='64' height='18' rx='6' fill='#2B1238'/><rect x='22' y='74' width='56' height='40' rx='10' fill='"+c+"'/><rect x='30' y='84' width='40' height='18' rx='3' fill='#fff' opacity='.85'/>"},
+lip:function(c){return "<rect x='40' y='10' width='20' height='34' rx='6' fill='"+c+"'/><rect x='34' y='44' width='32' height='14' rx='2' fill='#D9B26B'/><rect x='34' y='58' width='32' height='56' rx='4' fill='#2B1238'/>"},
+dropper:function(c){return "<rect x='42' y='4' width='16' height='26' rx='7' fill='#2B1238'/><rect x='36' y='30' width='28' height='10' rx='2' fill='#D9B26B'/><rect x='28' y='40' width='44' height='74' rx='10' fill='"+c+"'/><rect x='34' y='60' width='32' height='30' rx='4' fill='#fff' opacity='.85'/>"},
+perfume:function(c){return "<rect x='42' y='6' width='16' height='20' rx='3' fill='#D9B26B'/><rect x='38' y='26' width='24' height='10' rx='2' fill='#2B1238'/><rect x='20' y='36' width='60' height='78' rx='12' fill='"+c+"'/><rect x='32' y='58' width='36' height='28' rx='4' fill='#fff' opacity='.85'/>"}
+};
+function art(p){return "<svg viewBox='0 0 100 120' aria-hidden='true'>"+ART[p.t](p.col)+"</svg>"}
+function tk(n){return "৳"+n.toLocaleString("en-US")}
+function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
+
+var cat="All",query="",cart={},step="cart",lastOrder=null;
+var $=function(i){return document.getElementById(i)};
+$("ph").textContent="+"+WA.replace(/^880/,"0");
+$("shelf").innerHTML=[P[0],P[11],P[4],P[9]].map(art).join("");
+
+var cats=["All"].concat(P.map(function(p){return p.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
+function chips(){$("chips").innerHTML=cats.map(function(c){return "<button class='chip' aria-pressed='"+(c===cat)+"' data-c='"+c+"'>"+c+"</button>"}).join("")}
+$("chips").onclick=function(e){var c=e.target.dataset.c;if(c){cat=c;chips();grid()}};
+$("q").oninput=function(e){query=e.target.value.toLowerCase().trim();grid()};
+
+function grid(){
+var l=P.filter(function(p){return (cat==="All"||p.c===cat)&&(p.n+" "+p.c).toLowerCase().indexOf(query)>-1});
+$("empty").hidden=l.length>0;
+$("grid").innerHTML=l.map(function(p){
+return "<article class='card'><div class='pic'>"+(p.tag?"<span class='tag'>"+p.tag+"</span>":"")+art(p)+"</div><div class='info'><span class='cat'>"+p.c+"</span><h3>"+p.n+"</h3><div class='price'>"+tk(p.p)+(p.o?"<s>"+tk(p.o)+"</s>":"")+"</div><button class='btn' data-add='"+p.id+"'>Add to cart</button></div></article>"}).join("");
+}
+$("grid").onclick=function(e){var id=e.target.dataset.add;if(id){add(+id);e.target.textContent="Added";setTimeout(function(){e.target.textContent="Add to cart"},900)}};
+
+function add(id){cart[id]=(cart[id]||0)+1;sync()}
+function chg(id,d){cart[id]=(cart[id]||0)+d;if(cart[id]<=0)delete cart[id];sync()}
+function items(){return Object.keys(cart).map(function(k){var p=P.filter(function(x){return x.id==k})[0];return {p:p,q:cart[k]}})}
+function sub(){return items().reduce(function(s,i){return s+i.p.p*i.q},0)}
+function ship(area){var s=sub();if(s>=3000)return 0;return area==="Outside Dhaka"?120:60}
+function sync(){
+var n=items().reduce(function(s,i){return s+i.q},0);$("cnt").textContent=n;
+try{localStorage.setItem("gmbd_cart",JSON.stringify(cart))}catch(e){}
+if($("drawer").classList.contains("on")&&step!=="done"){if(n===0)step="cart";draw()}
+}
+
+function open(){$("drawer").classList.add("on");$("veil").classList.add("on");$("drawer").setAttribute("aria-hidden","false");draw()}
+function shut(){$("drawer").classList.remove("on");$("veil").classList.remove("on");$("drawer").setAttribute("aria-hidden","true");if(step==="done"){step="cart";lastOrder=null}}
+$("cartBtn").onclick=open;$("close").onclick=shut;$("veil").onclick=shut;
+document.onkeydown=function(e){if(e.key==="Escape")shut()};
+
+function draw(){
+var it=items(),db=$("db"),df=$("df");
+if(step==="done"){
+$("dt").textContent="Order placed";
+db.innerHTML="<div class='ok'><h2>Thank you, "+esc(lastOrder.name)+"</h2><p>Your order <b>"+lastOrder.no+"</b> is saved. Tap the button below to send it to us on WhatsApp so we can confirm it.</p></div>";
+df.innerHTML="<a class='btn' style='width:100%;text-align:center' target='_blank' rel='noopener' href='"+lastOrder.link+"'>Send order on WhatsApp</a>";
+return}
+if(it.length===0){$("dt").textContent="Your cart";db.innerHTML="<div class='empty'>Your cart is empty. Add a product to get started.</div>";df.innerHTML="<button class='btn' style='width:100%' id='go'>Browse products</button>";$("go").onclick=shut;return}
+if(step==="cart"){
+$("dt").textContent="Your cart";
+db.innerHTML=it.map(function(i){return "<div class='line'><div class='pic'>"+art(i.p)+"</div><div><b>"+i.p.n+"</b><br><span class='cat'>"+tk(i.p.p)+"</span><br><span class='qty'><button data-d='-1' data-i='"+i.p.id+"' aria-label='Decrease'>−</button><span>"+i.q+"</span><button data-d='1' data-i='"+i.p.id+"' aria-label='Increase'>+</button></span></div><b>"+tk(i.p.p*i.q)+"</b></div>"}).join("");
+df.innerHTML="<div class='row'><span>Subtotal</span><b>"+tk(sub())+"</b></div><p class='cat' style='margin:4px 0 12px'>Delivery is calculated at checkout. Free over ৳3,000.</p><button class='btn' style='width:100%' id='next'>Checkout</button>";
+$("next").onclick=function(){step="form";draw()};
+return}
+$("dt").textContent="Delivery details";
+db.innerHTML="<label for='f_n'>Full name</label><input class='in' id='f_n' autocomplete='name'><label for='f_p'>Mobile number</label><input class='in' id='f_p' inputmode='tel' placeholder='01XXXXXXXXX' autocomplete='tel'><label for='f_a'>Full address</label><input class='in' id='f_a' placeholder='House, road, area, thana' autocomplete='street-address'><label for='f_z'>Delivery area</label><select class='in' id='f_z'><option>Dhaka</option><option>Outside Dhaka</option></select><label for='f_m'>Payment method</label><select class='in' id='f_m'><option>Cash on delivery</option><option>bKash</option><option>Nagad</option></select><p class='cat' id='pn' hidden>Send the total to "+PAYNUM+" (Send Money) and add the transaction ID in your WhatsApp message.</p><div class='err' id='err' role='alert'></div>";
+df.innerHTML="<div class='row'><span>Subtotal</span><span>"+tk(sub())+"</span></div><div class='row'><span>Delivery</span><span id='sh'></span></div><div class='row t'><span>Total</span><span id='tot'></span></div><div style='display:flex;gap:8px;margin-top:12px'><button class='btn alt' id='back' style='color:var(--ink)'>Back</button><button class='btn' style='flex:1' id='place'>Place order</button></div>";
+function tot(){var s=ship($("f_z").value);$("sh").textContent=s?tk(s):"Free";$("tot").textContent=tk(sub()+s)}
+tot();$("f_z").onchange=tot;
+$("f_m").onchange=function(){$("pn").hidden=$("f_m").value==="Cash on delivery"};
+$("back").onclick=function(){step="cart";draw()};
+$("place").onclick=function(){
+var n=$("f_n").value.trim(),p=$("f_p").value.replace(/[\s-]/g,"").replace(/^\+?88/,""),a=$("f_a").value.trim();
+if(n.length<2){$("err").textContent="Enter your full name.";return}
+if(!/^01[3-9]\d{8}$/.test(p)){$("err").textContent="Enter a valid 11-digit mobile number, like 01712345678.";return}
+if(a.length<8){$("err").textContent="Enter your full address so we can deliver it.";return}
+var z=$("f_z").value,m=$("f_m").value,s=ship(z),total=sub()+s,no="GM"+Date.now().toString().slice(-6);
+var msg="New order "+no+"\n"+items().map(function(i){return i.q+" x "+i.p.n+" = "+tk(i.p.p*i.q)}).join("\n")+"\nSubtotal: "+tk(sub())+"\nDelivery: "+(s?tk(s):"Free")+"\nTotal: "+tk(total)+"\nPayment: "+m+"\nName: "+n+"\nPhone: "+p+"\nAddress: "+a+" ("+z+")";
+lastOrder={name:n,no:no,link:"https://wa.me/"+WA+"?text="+encodeURIComponent(msg)};
+cart={};step="done";sync();draw()};
+}
+$("db").onclick=function(e){var d=e.target.dataset;if(d.d)chg(+d.i,+d.d)};
+
+$("theme").onclick=function(){var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+try{var s=JSON.parse(localStorage.getItem("gmbd_cart")||"{}");Object.keys(s).forEach(function(k){if(P.some(function(p){return p.id==k})&&s[k]>0)cart[k]=s[k]})}catch(e){}
+chips();grid();sync();
+</script>
+</body>
+</html>
