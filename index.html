@@ -50,6 +50,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:va
 .shelf::after{content:"";position:absolute;left:2%;right:2%;bottom:0;height:24px;border-radius:12px;background:linear-gradient(#E8DCC3,#C9B58F);box-shadow:0 8px 14px rgba(0,0,0,.22)}
 .shelf svg{width:78px;height:auto;margin:0 2px 14px;position:relative;z-index:1;filter:drop-shadow(0 8px 8px rgba(0,0,0,.28))}
 .shelf img{width:130px;height:130px;object-fit:cover;border-radius:12px;margin:0 6px 14px;position:relative;z-index:1;box-shadow:0 8px 16px rgba(0,0,0,.28)}
+.shelf img:nth-child(2){width:158px;height:158px}
 
 .perks{display:flex;flex-wrap:wrap;gap:8px 28px;padding:16px 0;color:var(--muted);font-weight:500}
 section{padding:36px 0}
@@ -121,7 +122,7 @@ a.btn{display:inline-block;text-decoration:none}
 @media (min-width:700px){.pv{align-items:center}.pvc{border-radius:18px}}
 .wa{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:30;width:58px;height:58px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 .wa svg{width:34px;height:34px}
-@media (max-width:760px){.hero .wrap{grid-template-columns:1fr;padding-top:34px}.shelf svg{width:50px;margin:0 1px 12px}.shelf img{width:90px;height:90px;margin:0 4px 12px}.lf{width:100px}.m1{width:60px;height:60px;bottom:150px}.logo{font-size:16px;gap:8px}.logo img{width:36px;height:36px}.bar{flex-wrap:wrap}.search{order:3;flex-basis:100%;margin-left:0;padding:4px 14px}.bar .icon:first-of-type{margin-left:auto}}
+@media (max-width:760px){.hero .wrap{grid-template-columns:1fr;padding-top:34px}.shelf svg{width:50px;margin:0 1px 12px}.shelf img{width:92px;height:92px;margin:0 4px 12px}.shelf img:nth-child(2){width:108px;height:108px}.lf{width:100px}.m1{width:60px;height:60px;bottom:150px}.logo{font-size:16px;gap:8px}.logo img{width:36px;height:36px}.bar{flex-wrap:wrap}.search{order:3;flex-basis:100%;margin-left:0;padding:4px 14px}.bar .icon:first-of-type{margin-left:auto}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -158,7 +159,7 @@ a.btn{display:inline-block;text-decoration:none}
 <section style="background:var(--soft)"><div class="wrap">
 <h2>অর্ডার করার পদ্ধতি</h2>
 <div class="how">
-<div><h3>১. আপনার পছন্দের পণ্য নির্বাচন করুন</h3><p>আপনার পছন্দের পণ্যগুলো Cart Add করুন এবং সর্বমোট মূল্য দেখে নিন।</p></div>
+<div><h3>১. আপনার পছন্দের পণ্য নির্বাচন করুন</h3><p>আপনার পছন্দের পণ্যগুলো Cart এ Add করুন এবং সর্বমোট মূল্য দেখে নিন।</p></div>
 <div><h3>২. ডেলিভারির তথ্য দিন</h3><p>আপনার নাম, ফোন নম্বর এবং সম্পূর্ণ ঠিকানা প্রদান করুন।</p></div>
 <div><h3>৩. WhatsApp-এ অর্ডার নিশ্চিত করুন</h3><p>আমরা WhatsApp-এর মাধ্যমে আপনার অর্ডার নিশ্চিত করব।</p></div>
 <div><h3>ডেলিভারি চার্জ</h3><p>ঢাকার ভিতরে ৮০ টাকা<br>ঢাকার বাইরে ১৩০ টাকা<br>৩০০০ টাকার বেশি অর্ডারে ডেলিভারি চার্জ ফ্রি</p></div>
@@ -186,6 +187,8 @@ a.btn{display:inline-block;text-decoration:none}
 <script>
 // Edit these two lines to your real details.
 var WA = "8801521251357";        // WhatsApp number, with 880 and no + sign
+var SUPABASE_URL = "https://hsipmhauiduiwjjngiqp.supabase.co";   // example: https://abcdxyz.supabase.co  (leave empty to turn database saving off)
+var SUPABASE_KEY = "sb_publishable_M8L0wMDtLTe62YDdlG2oIQ_BGBmruCW";   // publishable key (sb_publishable_...) or legacy anon key. Never use the secret or service_role key here.
 var MAIL = "prataykumarpaul@gmail.com";  // order notifications go here
 var PAYNUM = "01910110012";      // bKash / Nagad number
 
@@ -212,9 +215,9 @@ var cat="All",query="",cart={},step="cart",lastOrder=null;
 var $=function(i){return document.getElementById(i)};
 $("ph").textContent="+"+WA;
 $("wa").href="https://wa.me/"+WA+"?text="+encodeURIComponent("আসসালামু আলাইকুম, Global Mart BD থেকে একটি প্রোডাক্ট সম্পর্কে জানতে চাই।");
-(function(){function sv(t,c){return "<svg viewBox='0 0 100 120'>"+ART[t](c)+"</svg>"}
-var cr=P.filter(function(p){return p.img})[0];
-$("shelf").innerHTML=sv("tube","#8BC34A")+sv("dropper","#E9A23B")+(cr?"<img src='"+cr.img+"' alt='' width='130' height='130'>":sv("jar","#7BA3DB"))+sv("bottle","#6FB7D9")+sv("jar","#D9689B")})();
+(function(){var h="";
+[14,13,15].forEach(function(id){var p=P.filter(function(x){return x.id===id&&x.img})[0];if(p)h+="<img src='"+p.img+"' alt='' width='130' height='130'>"});
+$("shelf").innerHTML=h})();
 
 var cats=["All"].concat(P.map(function(p){return p.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
 function chips(){$("chips").style.display=cats.length<3?"none":"";$("chips").innerHTML=cats.map(function(c){return "<button class='chip' aria-pressed='"+(c===cat)+"' data-c='"+c+"'>"+c+"</button>"}).join("")}
@@ -280,6 +283,8 @@ if(a.length<8){$("err").textContent="Enter your full address so we can deliver i
 var z=$("f_z").value,m="Cash on delivery",note=$("f_note").value.trim().slice(0,300),s=ship(z),total=sub()+s,no="GM"+Date.now().toString().slice(-6);
 var msg="New order "+no+"\n"+items().map(function(i){return i.q+" x "+i.p.n+" = "+tk(i.p.p*i.q)}).join("\n")+"\nSubtotal: "+tk(sub())+"\nDelivery: "+(s?tk(s):"Free")+"\nTotal: "+tk(total)+"\nPayment: "+m+"\nName: "+n+"\nPhone: "+p+"\nAddress: "+a+" ("+z+")"+(note?"\nNote: "+note:"");
 try{fetch("https://formsubmit.co/ajax/"+MAIL,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({_subject:"New order "+no+" - Global Mart BD",_captcha:"false",_template:"table",Order:no,Name:n,Phone:p,Address:a+" ("+z+")",Payment:m,Note:note||"-",Total:tk(total),Details:msg})}).catch(function(){})}catch(e){}
+if(SUPABASE_URL&&SUPABASE_KEY){try{var sh={"Content-Type":"application/json",apikey:SUPABASE_KEY,Prefer:"return=minimal"};if(SUPABASE_KEY.indexOf("eyJ")===0)sh.Authorization="Bearer "+SUPABASE_KEY;
+fetch(SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/gm_orders",{method:"POST",headers:sh,body:JSON.stringify({order_no:no,name:n,phone:p,address:a,area:z,payment:m,note:note||null,items:items().map(function(i){return {id:i.p.id,name:i.p.n,qty:i.q,price:i.p.p}}),subtotal:sub(),delivery:s,total:total})}).catch(function(){})}catch(e){}}
 lastOrder={name:n,no:no,link:"https://wa.me/"+WA+"?text="+encodeURIComponent(msg)};
 cart={};step="done";sync();draw()};
 }
