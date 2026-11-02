@@ -10,13 +10,13 @@
 @media (prefers-color-scheme:dark){:root{--bg:#1A0E22;--surface:#251433;--ink:#F6E9F1;--muted:#BBA3C6;--brand:#E2569B;--onbrand:#1A0E22;--line:#47305E;--soft:#34204A;color-scheme:dark}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-button,input{font:inherit;color:inherit}button{cursor:pointer}
+button,input,textarea{font:inherit;color:inherit}button{cursor:pointer}
 :focus-visible{outline:3px solid var(--brand);outline-offset:2px}
 .wrap{max-width:760px;margin:0 auto;padding:0 14px 40px}
 .box{max-width:380px;margin:12vh auto;padding:22px;background:var(--surface);border:1px solid var(--line);border-radius:16px}
 h1{font-size:22px;margin:0 0 10px}
 label{display:block;font-weight:600;margin:12px 0 4px}
-input{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px}
+input,textarea{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:10px 12px}
 .pri{background:var(--brand);color:var(--onbrand);border:0;border-radius:10px;padding:11px 18px;font-weight:600;width:100%;margin-top:16px}
 .pri:disabled,.sb:disabled{opacity:.5}
 .err{color:#C0264B;min-height:22px;margin:8px 0 0}
@@ -43,6 +43,15 @@ ul{margin:8px 0;padding-left:20px}
 .acts,.sts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .ca{border:1px solid var(--line);border-radius:8px;padding:7px 12px;text-decoration:none;color:inherit;background:var(--bg)}
 .sb{border:0;color:#fff;border-radius:8px;padding:7px 12px;font-weight:600}
+.seg{display:flex;gap:8px;padding-top:0}
+.tb{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:8px;font-weight:600}
+.tb[aria-pressed="true"]{background:var(--brand);color:var(--onbrand);border-color:var(--brand)}
+.add{margin:14px 0}
+.prow{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:start}
+.prow img,.ph{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--soft)}
+.pb{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap}
+.pvw{width:120px;height:120px;object-fit:cover;border-radius:8px;margin-top:8px}
+.chk{display:flex;gap:8px;align-items:center}.chk input{width:auto}
 </style>
 </head>
 <body>
@@ -56,13 +65,34 @@ ul{margin:8px 0;padding-left:20px}
 </div>
 
 <div id="app" hidden>
-<header><div class="wrap"><b>Orders</b><button class="sm" id="rf">Refresh</button><button class="sm" id="lo">Sign out</button></div></header>
-<div class="wrap">
+<header><div class="wrap"><b>Admin</b><button class="sm" id="rf">Refresh</button><button class="sm" id="lo">Sign out</button></div><div class="wrap seg"><button class="tb" id="t1" aria-pressed="true">Orders</button><button class="tb" id="t2" aria-pressed="false">Products</button></div></header>
+<div class="wrap" id="v1">
 <div class="stats" id="stats"></div>
 <input id="q" type="search" placeholder="Search name, phone or order number" aria-label="Search orders">
 <div class="tabs" id="tabs"></div>
 <p class="err" id="am" role="alert"></p>
 <div id="list"></div>
+</div>
+<div class="wrap" id="v2" hidden>
+<button class="pri add" id="addp">+ Add new product</button>
+<p class="err" id="pm" role="alert"></p>
+<div id="imp" hidden><p class="muted">No products are saved in the database yet. Import the products already on your website so you can manage them here.</p><button class="pri" id="impb">Import current website products</button></div>
+<div id="plist"></div>
+<div id="pform" class="card" hidden>
+<h3 id="pft">Add product</h3>
+<label for="f_n">Product name</label><input id="f_n">
+<label for="f_c">Category</label><input id="f_c" list="cats"><datalist id="cats"><option>Skincare</option><option>Makeup</option><option>Hair</option><option>Fragrance</option></datalist>
+<label for="f_p">Price (৳)</label><input id="f_p" inputmode="numeric">
+<label for="f_o">Old price (৳, optional)</label><input id="f_o" inputmode="numeric">
+<label for="f_s">Size (optional, like 80ml)</label><input id="f_s">
+<label for="f_t">Tag (optional, like Offer)</label><input id="f_t">
+<label for="f_i">Photo</label><input id="f_i" type="file" accept="image/*"><img id="f_pv" class="pvw" alt="" hidden>
+<label for="f_d">Description</label><textarea id="f_d" rows="9"></textarea>
+<label for="f_r">Order (optional, a small number shows first)</label><input id="f_r" inputmode="numeric">
+<label class="chk"><input type="checkbox" id="f_a"> Show on website</label>
+<p class="err" id="fm" role="alert"></p>
+<div class="acts"><button class="pri" id="fs" style="width:auto">Save product</button><button class="sm" id="fc">Cancel</button></div>
+</div>
 </div>
 </div>
 
@@ -140,7 +170,7 @@ async function setStatus(id,st,btn){
     orders.forEach(function(o){if(String(o.id)===String(id))o.status=st});render();
   }catch(e){$("am").textContent=e.message;btn.disabled=false}
 }
-function start(){show(true);fetchOrders(false)}
+function start(){show(true);tab("orders");fetchOrders(false)}
 
 $("go").onclick=async function(){
   var b=this;$("lm").textContent="";b.disabled=true;
@@ -150,10 +180,64 @@ $("go").onclick=async function(){
 };
 $("pw").onkeydown=function(e){if(e.key==="Enter")$("go").click()};
 $("lo").onclick=logout;
-$("rf").onclick=function(){fetchOrders(false)};
+$("rf").onclick=function(){if(view==="products")fetchProds();else fetchOrders(false)};
 $("q").oninput=function(e){q=e.target.value.toLowerCase().trim();render()};
 $("tabs").onclick=function(e){var f=e.target.dataset.f;if(f){filter=f;render()}};
 $("list").onclick=function(e){var b=e.target.closest("button[data-st]");if(b)setStatus(b.dataset.id,b.dataset.st,b)};
+
+var prods=[],editing=null,view="orders";
+function tab(v){view=v;$("v1").hidden=v!=="orders";$("v2").hidden=v!=="products";$("t1").setAttribute("aria-pressed",v==="orders");$("t2").setAttribute("aria-pressed",v==="products");if(v==="products")fetchProds()}
+$("t1").onclick=function(){tab("orders")};$("t2").onclick=function(){tab("products")};
+async function fetchProds(){try{prods=await api("gm_products?select=*&order=sort.asc,id.asc");$("pm").textContent="";rProds()}catch(e){$("pm").textContent=e.message}}
+function pcard(p){return "<article class='card prow'>"+(p.image_url?"<img src='"+esc(p.image_url)+"' alt=''>":"<div class='ph'></div>")+"<div><b>"+esc(p.name)+"</b><div class='muted'>"+esc(p.category)+" · "+money(p.price)+(p.old_price?" (was "+money(p.old_price)+")":"")+"</div><span class='badge "+(p.active?"delivered":"cancelled")+"'>"+(p.active?"Visible":"Hidden")+"</span></div><div class='pb'><button class='sm' data-e='"+p.id+"'>Edit</button><button class='sm' data-v='"+p.id+"'>"+(p.active?"Hide":"Show")+"</button><button class='sm' data-x='"+p.id+"'>Delete</button></div></article>"}
+function rProds(){$("imp").hidden=prods.length>0||!$("pform").hidden;$("plist").innerHTML=prods.map(pcard).join("")}
+function byId(id){return prods.filter(function(x){return String(x.id)===String(id)})[0]}
+function openForm(p){editing=p||null;$("pft").textContent=p?"Edit product":"Add product";
+  $("f_n").value=p?p.name:"";$("f_c").value=p?p.category:"Skincare";$("f_p").value=p?p.price:"";$("f_o").value=(p&&p.old_price)||"";$("f_s").value=(p&&p.size)||"";$("f_t").value=(p&&p.tag)||"";$("f_d").value=(p&&p.description)||"";$("f_r").value=p?p.sort:0;$("f_a").checked=p?p.active:true;$("f_i").value="";
+  var pv=$("f_pv");if(p&&p.image_url){pv.src=p.image_url;pv.hidden=false}else pv.hidden=true;
+  $("fm").textContent="";$("pform").hidden=false;$("plist").hidden=true;$("addp").hidden=true;$("imp").hidden=true;$("pform").scrollIntoView()}
+function closeForm(){$("pform").hidden=true;$("plist").hidden=false;$("addp").hidden=false;rProds()}
+$("addp").onclick=function(){openForm(null)};$("fc").onclick=closeForm;
+$("f_i").onchange=function(){var f=this.files[0];if(f){$("f_pv").src=URL.createObjectURL(f);$("f_pv").hidden=false}};
+
+function resize(file){return new Promise(function(res,rej){var im=new Image(),u=URL.createObjectURL(file);
+  im.onload=function(){var m=Math.max(im.width,im.height),side=Math.min(900,m),sc=side/m,c=document.createElement("canvas");c.width=c.height=side;var x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,side,side);var w=im.width*sc,hh=im.height*sc;x.drawImage(im,(side-w)/2,(side-hh)/2,w,hh);URL.revokeObjectURL(u);c.toBlob(function(b){b?res(b):rej(new Error("Could not read the photo"))},"image/jpeg",.84)};
+  im.onerror=function(){rej(new Error("Could not read the photo"))};im.src=u})}
+async function upload(blob){var t=await token(),name=Date.now()+"-"+Math.random().toString(36).slice(2,8)+".jpg";
+  var r=await fetch(URL_+"/storage/v1/object/product-images/"+name,{method:"POST",headers:{apikey:KEY,Authorization:"Bearer "+t,"Content-Type":"image/jpeg"},body:blob});
+  var d=await r.json().catch(function(){return {}});if(!r.ok)throw new Error(d.message||"Photo upload failed");
+  return URL_+"/storage/v1/object/public/product-images/"+name}
+
+$("fs").onclick=async function(){var b=this,m=$("fm");m.textContent="";
+  var name=$("f_n").value.trim(),price=parseInt($("f_p").value,10),old=parseInt($("f_o").value,10);
+  if(!name){m.textContent="Enter the product name.";return}
+  if(!(price>0)){m.textContent="Enter the price as a number.";return}
+  b.disabled=true;b.textContent="Saving…";
+  try{var url=editing?editing.image_url:null,f=$("f_i").files[0];if(f)url=await upload(await resize(f));
+    var row={name:name,category:$("f_c").value.trim()||"Skincare",price:price,old_price:old>0?old:null,size:$("f_s").value.trim()||null,tag:$("f_t").value.trim()||null,image_url:url||null,description:$("f_d").value.trim()||null,active:$("f_a").checked,sort:parseInt($("f_r").value,10)||0};
+    var r=await api(editing?"gm_products?id=eq."+editing.id:"gm_products",{method:editing?"PATCH":"POST",headers:{Prefer:"return=representation"},body:JSON.stringify(row)});
+    if(!r||!r.length)throw new Error("Not saved. Check the admin policies in Supabase.");
+    await fetchProds();closeForm()}
+  catch(e){m.textContent=e.message}
+  b.disabled=false;b.textContent="Save product"};
+
+$("plist").onclick=async function(e){var d=e.target.dataset,btn=e.target;
+  try{
+    if(d.e){openForm(byId(d.e))}
+    else if(d.v){var p=byId(d.v);btn.disabled=true;await api("gm_products?id=eq."+p.id,{method:"PATCH",body:JSON.stringify({active:!p.active})});await fetchProds()}
+    else if(d.x){var q2=byId(d.x);if(!confirm("Delete "+q2.name+"? This cannot be undone."))return;btn.disabled=true;await api("gm_products?id=eq."+q2.id,{method:"DELETE"});await fetchProds()}
+  }catch(er){$("pm").textContent=er.message;btn.disabled=false}};
+
+$("impb").onclick=async function(){var b=this;b.disabled=true;$("pm").textContent="Importing, please wait…";
+  try{var txt=await (await fetch("index.html",{cache:"no-store"})).text();
+    var L=txt.split("\n").filter(function(l){return /^\{"id": \d+,/.test(l)});
+    if(!L.length)throw new Error("Could not find the products. Keep admin.html and index.html in the same folder.");
+    for(var i=0;i<L.length;i++){var p=JSON.parse(L[i].replace(/,\s*$/,"")),url=null;
+      if(p.img)url=await upload(await (await fetch(p.img)).blob());
+      await api("gm_products",{method:"POST",headers:{Prefer:"return=minimal"},body:JSON.stringify({name:p.n,category:p.c,price:p.p,old_price:p.o||null,size:p.size||null,tag:p.tag||null,image_url:url,description:p.d||null,active:true,sort:i})})}
+    $("pm").textContent="";await fetchProds()}
+  catch(e){$("pm").textContent=e.message}
+  b.disabled=false};
 setInterval(function(){if(sess&&!document.hidden&&!$("app").hidden)fetchOrders(true)},60000);
 
 loadSess();
