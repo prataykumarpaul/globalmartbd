@@ -209,7 +209,7 @@ dropper:function(c){return "<rect x='42' y='4' width='16' height='26' rx='7' fil
 perfume:function(c){return "<rect x='42' y='6' width='16' height='20' rx='3' fill='#D9B26B'/><rect x='38' y='26' width='24' height='10' rx='2' fill='#2B1238'/><rect x='20' y='36' width='60' height='78' rx='12' fill='"+c+"'/><rect x='32' y='58' width='36' height='28' rx='4' fill='#fff' opacity='.85'/>"}
 };
 function art(p){return "<svg viewBox='0 0 100 120' aria-hidden='true'>"+ART[p.t](p.col)+"</svg>"}
-function pic(p){return p.img?"<img src='"+p.img+"' alt='"+esc(p.n)+"' width='320' height='320'>":art(p)}
+function pic(p){return p.img?"<img src='"+esc(p.img)+"' alt='"+esc(p.n)+"' width='320' height='320'>":art(p)}
 function tk(n){return "৳"+n.toLocaleString("en-US")}
 function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]})}
 
@@ -217,9 +217,8 @@ var cat="All",query="",cart={},step="cart",lastOrder=null;
 var $=function(i){return document.getElementById(i)};
 $("ph").textContent="+"+WA;
 $("wa").href="https://wa.me/"+WA+"?text="+encodeURIComponent("আসসালামু আলাইকুম, Global Mart BD থেকে একটি প্রোডাক্ট সম্পর্কে জানতে চাই।");
-(function(){var h="";
-[14,13,15].forEach(function(id){var p=P.filter(function(x){return x.id===id&&x.img})[0];if(p)h+="<img src='"+p.img+"' alt='' width='130' height='130'>"});
-$("shelf").innerHTML=h})();
+function shelf(){var l=P.filter(function(p){return p.img}).slice(0,3);if(l.length===3)l=[l[1],l[0],l[2]];$("shelf").innerHTML=l.map(function(p){return "<img src='"+esc(p.img)+"' alt='' width='130' height='130'>"}).join("")}
+shelf();
 
 var cats=["All"].concat(P.map(function(p){return p.c}).filter(function(v,i,a){return a.indexOf(v)===i}));
 function chips(){$("chips").style.display=cats.length<3?"none":"";$("chips").innerHTML=cats.map(function(c){return "<button class='chip' aria-pressed='"+(c===cat)+"' data-c='"+c+"'>"+c+"</button>"}).join("")}
@@ -230,12 +229,12 @@ function grid(){
 var l=P.filter(function(p){return (cat==="All"||p.c===cat)&&(p.n+" "+p.c).toLowerCase().indexOf(query)>-1});
 $("empty").hidden=l.length>0;
 $("grid").innerHTML=l.map(function(p){
-return "<article class='card'><div class='pic'>"+(p.tag?"<span class='tag'>"+p.tag+"</span>":"")+pic(p)+"</div><div class='info'><span class='cat'>"+p.c+"</span><h3>"+p.n+"</h3><div class='price'>"+tk(p.p)+(p.o?"<s>"+tk(p.o)+"</s>":"")+"</div><div class='acts'><button class='btn ghost' data-view='"+p.id+"'>View product</button><button class='btn' data-add='"+p.id+"'>Add to cart</button></div></div></article>"}).join("");
+return "<article class='card'><div class='pic'>"+(p.tag?"<span class='tag'>"+p.tag+"</span>":"")+pic(p)+"</div><div class='info'><span class='cat'>"+esc(p.c)+"</span><h3>"+esc(p.n)+"</h3><div class='price'>"+tk(p.p)+(p.o?"<s>"+tk(p.o)+"</s>":"")+"</div><div class='acts'><button class='btn ghost' data-view='"+p.id+"'>View product</button><button class='btn' data-add='"+p.id+"'>Add to cart</button></div></div></article>"}).join("");
 }
 $("grid").onclick=function(e){var id=e.target.dataset.add;if(id){add(+id);e.target.textContent="Added";setTimeout(function(){e.target.textContent="Add to cart"},900)}else if(e.target.dataset.view)view(+e.target.dataset.view)};
 function view(id){var p=P.filter(function(x){return x.id==id})[0];
 $("pvp").innerHTML=pic(p);
-$("pvi").innerHTML="<span class='cat'>"+p.c+(p.size?" · "+p.size:"")+"</span><h2>"+esc(p.n)+"</h2><div class='price'>"+tk(p.p)+(p.o?"<s>"+tk(p.o)+"</s>":"")+"</div>"+(p.d?"<div class='dsc'>"+esc(p.d)+"</div>":"<div style='height:16px'></div>")+"<button class='btn' style='width:100%' id='pva'>Add to cart</button>";
+$("pvi").innerHTML="<span class='cat'>"+esc(p.c)+(p.size?" · "+esc(p.size):"")+"</span><h2>"+esc(p.n)+"</h2><div class='price'>"+tk(p.p)+(p.o?"<s>"+tk(p.o)+"</s>":"")+"</div>"+(p.d?"<div class='dsc'>"+esc(p.d)+"</div>":"<div style='height:16px'></div>")+"<button class='btn' style='width:100%' id='pva'>Add to cart</button>";
 $("pv").hidden=false;
 $("pva").onclick=function(){add(p.id);$("pv").hidden=true;open()}}
 $("pvx").onclick=function(){$("pv").hidden=true};
@@ -267,7 +266,7 @@ return}
 if(it.length===0){$("dt").textContent="Your cart";db.innerHTML="<div class='empty'>Your cart is empty. Add a product to get started.</div>";df.innerHTML="<button class='btn' style='width:100%' id='go'>Browse products</button>";$("go").onclick=shut;return}
 if(step==="cart"){
 $("dt").textContent="Your cart";
-db.innerHTML=it.map(function(i){return "<div class='line'><div class='pic'>"+pic(i.p)+"</div><div><b>"+i.p.n+"</b><br><span class='cat'>"+tk(i.p.p)+"</span><br><span class='qty'><button data-d='-1' data-i='"+i.p.id+"' aria-label='Decrease'>−</button><span>"+i.q+"</span><button data-d='1' data-i='"+i.p.id+"' aria-label='Increase'>+</button></span></div><b>"+tk(i.p.p*i.q)+"</b></div>"}).join("");
+db.innerHTML=it.map(function(i){return "<div class='line'><div class='pic'>"+pic(i.p)+"</div><div><b>"+esc(i.p.n)+"</b><br><span class='cat'>"+tk(i.p.p)+"</span><br><span class='qty'><button data-d='-1' data-i='"+i.p.id+"' aria-label='Decrease'>−</button><span>"+i.q+"</span><button data-d='1' data-i='"+i.p.id+"' aria-label='Increase'>+</button></span></div><b>"+tk(i.p.p*i.q)+"</b></div>"}).join("");
 df.innerHTML="<div class='row'><span>Subtotal</span><b>"+tk(sub())+"</b></div><p class='cat' style='margin:4px 0 12px'>Delivery is calculated at checkout. Free over ৳3,000.</p><button class='btn' style='width:100%' id='next'>Checkout</button>";
 $("next").onclick=function(){step="form";draw()};
 return}
@@ -295,6 +294,18 @@ $("db").onclick=function(e){var d=e.target.dataset;if(d.d)chg(+d.i,+d.d)};
 $("theme").onclick=function(){var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
 try{var s=JSON.parse(localStorage.getItem("gmbd_cart")||"{}");Object.keys(s).forEach(function(k){if(P.some(function(p){return p.id==k})&&s[k]>0)cart[k]=s[k]})}catch(e){}
 chips();grid();sync();
+function loadDB(){
+  if(!SUPABASE_URL||!SUPABASE_KEY)return;
+  fetch(SUPABASE_URL.replace(/\/$/,"")+"/rest/v1/gm_products?select=*&active=eq.true&order=sort.asc,id.asc",{headers:{apikey:SUPABASE_KEY}})
+  .then(function(r){return r.ok?r.json():null}).then(function(rows){
+    if(!rows||!rows.length)return;
+    P=rows.map(function(r){return {id:1000+r.id,n:r.name,c:r.category||"Skincare",p:r.price,o:r.old_price||undefined,tag:r.tag||undefined,size:r.size||undefined,img:r.image_url||undefined,d:r.description||undefined,t:"jar",col:"#9C6ADE"}});
+    Object.keys(cart).forEach(function(k){if(!P.some(function(p){return p.id==k}))delete cart[k]});
+    cats=["All"].concat(P.map(function(p){return p.c}).filter(function(v,i,a){return a.indexOf(v)===i}));cat="All";
+    chips();grid();shelf();sync();
+  }).catch(function(){});
+}
+loadDB();
 </script>
 </body>
 </html>
